@@ -1,0 +1,176 @@
+using System;
+using System.Collections.Generic;
+
+namespace SimpleStore
+{
+    struct Product
+    {
+        public string name { get; set; }
+        public double tovarPrice { get; set; }
+        public int kolltovar { get; set; }
+    }
+
+
+    class Store
+    {
+        private List<Product> products = new List<Product>();
+
+ 
+        public void Productadd(Product tovar)
+        {
+            products.Add(tovar);
+        }
+
+ 
+        public void ShowProducts()
+        {
+            if (products.Count == 0)
+            {
+                Console.WriteLine("В магазине нет товаров");
+                return;
+            }
+
+            Console.WriteLine("Список товаров:");
+            Console.WriteLine("  ");
+            foreach (var product in products)
+            {
+                Console.WriteLine($"Название: {product.name}, Цена: {product.tovarPrice}, Количество: {product.kolltovar}");
+            }
+        }
+
+        public Product FindProductByName(string name)
+        {
+            foreach (var product in products)
+            {
+                if (product.name.ToLower() == name.ToLower())
+                {
+                    return product;
+                }
+            }
+
+            return new Product();
+        }
+
+        public bool SellProduct(string name, int quantity)
+        {
+            var product = FindProductByName(name);
+
+            if (product.name == "")
+            {
+                Console.WriteLine("Товар не найден");
+                return false;
+            }
+
+            if (product.kolltovar < quantity)
+            {
+                Console.WriteLine($"Недостаточно товара на складе. Остаток: {product.kolltovar}");
+                return false;
+            }
+
+            product.kolltovar = product.kolltovar - quantity;
+            return true;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Store store = new Store();
+
+            while (true)
+            {
+                Console.WriteLine("Выберите действие: ");
+                Console.WriteLine("1. Добавить товар");
+                Console.WriteLine("2. Просмотреть список товаров");
+                Console.WriteLine("3. Найти товар по названию");
+                Console.WriteLine("4. Продать товар");
+                Console.WriteLine("5. Выход");
+                int choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                        try
+                        {
+                            Console.Write("Введите название товара: ");
+                            string name = Console.ReadLine();
+
+                            Console.Write("Введите цену товара: ");
+                            double price = double.Parse(Console.ReadLine());
+
+                            Console.Write("Введите количество товара: ");
+                            int quantity = int.Parse(Console.ReadLine());
+
+                            if (string.IsNullOrEmpty(name))
+                            {
+                                Console.WriteLine("Название товара не может быть пустым.");
+                                break;
+                            }
+
+                            if (price <= 0)
+                            {
+                                Console.WriteLine("Цена товара должна быть положительной");
+                                break;
+                            }
+
+                            if (quantity < 0)
+                            {
+                                Console.WriteLine("Количество товара должно быть неотрицательным");
+                                break;
+                            }
+
+                            store.Productadd(new Product { name = name, tovarPrice = price, kolltovar = quantity });
+                            Console.WriteLine("Товар добавлен в магазин.");
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Неверный формат данных. Введите числовые значения");
+                        }
+                        break;
+
+                    case 2:
+                        store.ShowProducts();
+                        break;
+
+                    case 3:
+                        Console.Write("Введите название товара: ");
+                        string productName = Console.ReadLine();
+                        var product = store.FindProductByName(productName);
+                        if (product.name == "")
+                        {
+                            Console.WriteLine("Товар не найден");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Название: {product.name}, Цена: {product.tovarPrice}, Количество: {product.kolltovar}");
+                        }
+                        break;
+
+                    case 4:
+                        Console.Write("Введите название товара: ");
+                        string sellName = Console.ReadLine();
+
+                        Console.Write("Введите количество товара для продажи: ");
+                        int sellTovar = int.Parse(Console.ReadLine());
+
+                        if (store.SellProduct(sellName, sellTovar))
+                        {
+                            Console.WriteLine("Товар продан");
+                        }
+                        break;
+
+                    case 5:
+                        Console.WriteLine("Выход из программы");
+                        return;
+
+                    default:
+                        Console.WriteLine("Неверный выбор");
+                        break;
+                }
+
+                Console.WriteLine();
+            }
+        }
+    }
+}
