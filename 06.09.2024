@@ -1,0 +1,140 @@
+using System;
+
+class PuzzleGame
+{
+    private int[,] board;
+    private int emptyRow;
+    private int emptyCol;
+
+    public PuzzleGame()
+    {
+        board = new int[4, 4];
+        InitializeBoard();
+        ShuffleBoard();
+    }
+    private void InitializeBoard()
+    {
+        int num = 1;
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                board[i, j] = (i == 3 && j == 3) ? 0 : num++;
+            }
+        }
+        emptyRow = 3;
+        emptyCol = 3;
+    }
+    // Вывод игрового поля
+    public void PrintBoard()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (board[i, j] == 0)
+                    Console.Write("_ ");
+                else
+                    Console.Write(board[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+    // Перемещение плитки
+    public bool Move(char direction)
+    {
+        int newRow = emptyRow;
+        int newCol = emptyCol;
+
+        switch (direction)
+        {
+            case 'W':
+                newRow--;
+                break;
+            case 'A':
+                newCol--;
+                break;
+            case 'S':
+                newRow++;
+                break;
+            case 'D':
+                newCol++;
+                break;
+            default:
+                return false;
+        }
+
+        if (newRow >= 0 && newRow < 4 && newCol >= 0 && newCol < 4)
+        {
+            board[emptyRow, emptyCol] = board[newRow, newCol];
+            board[newRow, newCol] = 0;
+            emptyRow = newRow;
+            emptyCol = newCol;
+            return true;
+        }
+        return false;
+    }
+
+    // Проверка победного состояния
+    public bool CheckWin()
+    {
+        int num = 1;
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (i == 3 && j == 3)
+                {
+                    if (board[i, j] != 0) return false;
+                }
+                else if (board[i, j] != num)
+                {
+                    return false;
+                }
+                num++;
+            }
+        }
+        return true;
+    }
+
+    // Перемешивание игрового поля 
+    private void ShuffleBoard()
+    {
+        Random random = new Random();
+        for (int i = 0; i < 1000; i++)
+        {
+            char[] directions = { 'W', 'A', 'S', 'D' };
+            Move(directions[random.Next(4)]);
+        }
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Если хотите покинуть игру, введите Q");
+        PuzzleGame game = new PuzzleGame();
+        while (true)
+        {
+            game.PrintBoard();
+            Console.Write("Введите команду (W, A, S, D, Q): ");
+            char command = Console.ReadKey().KeyChar;
+            if (command == 'Q')
+            {
+                break;
+            }
+            if (game.Move(command))
+            {
+                if (game.CheckWin())
+                {
+                    Console.WriteLine("Поздравляем! Вы победили!");
+                    break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Некорректный ход.");
+            }
+        }
+    }
+}
