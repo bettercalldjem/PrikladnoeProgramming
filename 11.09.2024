@@ -1,0 +1,117 @@
+///*List<string> names = new List<string> { "Анна", "Jonathan", "Canada", "Andrew", "Banana", "Alan", "Максим", "Тимур", "Роман", "Никита" };
+//Console.WriteLine("Имеющиеся имена: ");
+//foreach (string name in names)
+//{
+//    Console.WriteLine(name);
+//}
+//static List<string> SearchStrings(List<string> list, string search)
+//{
+//    return list.Where(s => s.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+//}
+//while (true)
+//{
+//    Console.WriteLine("Введите строку для поиска (или 'exit' для завершения):");
+//    string input = Console.ReadLine();
+//    if (input.ToLower() == "exit") break;
+//    List<string> results = SearchStrings(names, input);
+//    if (results.Count > 0)
+//    {
+//        Console.WriteLine("Найдены строки:");
+//        foreach (var result in results)
+//        {
+//            Console.WriteLine(result);
+//        }
+//    }
+//    else
+//    {
+//        Console.WriteLine("Совпадений не найдено.");
+//    }
+//}   */
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+
+//class Program
+//{
+//    private static List<string> names = new List<string> { "Анна", "Jonathan", "Canada", "Andrew", "Banana", "Alan", "Максим", "Тимур", "Роман", "Никита" };
+
+//    private static string currentSearch = string.Empty; 
+
+//    static void Main()
+//    {
+     
+//        Console.Clear();
+//        while (true)
+//        {
+         
+//            UpdateScreen();
+
+//            Console.WriteLine("\nВведите строку для поиска (или 'exit' для завершения):");
+//            Console.Write($"Поиск: "); 
+
+//            ConsoleKeyInfo keyInfo;
+//            while (true)
+//            {
+//                keyInfo = Console.ReadKey(intercept: true); 
+
+//                if (keyInfo.Key == ConsoleKey.Enter) 
+//                {
+//                    Console.WriteLine(); 
+//                    break;
+//                }
+//                if (keyInfo.Key == ConsoleKey.Escape) 
+//                {
+//                    currentSearch = string.Empty;
+//                    UpdateScreen();
+//                }
+//                else if (char.IsLetterOrDigit(keyInfo.KeyChar) || char.IsWhiteSpace(keyInfo.KeyChar))
+//                {
+//                    currentSearch += keyInfo.KeyChar;
+//                    Console.Write(keyInfo.KeyChar); 
+//                }
+//            }
+//        }
+//    }
+
+ 
+//    static void UpdateScreen()
+//    {
+//        Console.Clear();
+//        DisplayList(names);
+//        DisplayResults(SearchStrings(names, currentSearch), currentSearch);
+//    }
+
+
+//    static void DisplayList(List<string> list)
+//    {
+//        Console.WriteLine("Список имен:");
+//        foreach (var name in list)
+//        {
+//            Console.WriteLine(name);
+//        }
+//    }
+
+//    static void DisplayResults(List<string> results, string search)
+//    {
+//        Console.WriteLine($"\nРезультаты поиска по '{search}':");
+//        if (results.Count > 0)
+//        {
+//            foreach (var result in results)
+//            {
+                
+//                Console.WriteLine(result);
+//            }
+//        }
+//        else
+//        {
+//            Console.WriteLine("Совпадений не найдено.");
+//        }
+//    }
+
+ 
+//    static List<string> SearchStrings(List<string> list, string search)
+//    {
+//        return list.Where(s => s.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+//    }
+
+//}
